@@ -94,6 +94,26 @@ class LdapAuthenticate:
                     attributes=self.config.attributes)
         return self.__toInfos(conn.entries)
 
+    def getInfosWithAttributes(self, conn: Connection, filters: Union[str, Dict[str, str]], attribues: List[str]) -> List[UserInfos]:
+        """ Get list of entries information from active directory
+
+        ## Arguments
+        conn: Connection
+            Active directory connection
+        filters: str | Dict[str, str]
+            * sr: filter string
+            * Dict[str, str]: Filter key value pairs
+
+        ## Returns
+        UserInfos | None
+            User information if avaliable. otherwise, `None`
+        """
+        conn.search(search_base=self.config.search_base,
+                    search_filter=self.__toFilterStr(filters),
+                    search_scope='SUBTREE',
+                    attributes=attribues)
+        return self.__toInfos(conn.entries)
+
     def getInfo(self, conn: Connection, filters: Union[str, Dict[str, str]]) -> Optional[UserInfos]:
         """ Get entry information from active directory
         
