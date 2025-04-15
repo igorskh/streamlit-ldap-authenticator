@@ -61,7 +61,7 @@ class LdapAuthenticate:
         try:
             conn.bind()
             conn.password = None
-            if conn.result['result'] != 0: return 'Wrong username or password'
+            if conn.result['result'] != 0: return self.config.login_failed_message
             user = getInfo(conn)
             if user is None: return f"No information found in active directory for '{username}'"
             if additionalCheck is None: return user

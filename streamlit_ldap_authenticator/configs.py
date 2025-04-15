@@ -112,7 +112,9 @@ class LdapConfig(Config):
     attributes: List[str]
     use_ssl: bool
 
-    def __init__(self, server_path: str, domain: str, search_base: str, attributes: List[str], use_ssl: bool = True):
+    login_failed_message: str
+
+    def __init__(self, server_path: str, domain: str, search_base: str, attributes: List[str], use_ssl: bool = True, login_failed_message: str = "Wrong username or password"):
         """ Create an instance of `LdapConfig` object
 
         ## Arguments
@@ -130,6 +132,7 @@ class LdapConfig(Config):
         self.search_base = search_base
         self.attributes = attributes
         self.use_ssl = use_ssl
+        self.login_failed_message = login_failed_message
 
     @classmethod
     def from_dict(cls, dict: AttrDict) -> 'LdapConfig':
@@ -138,7 +141,8 @@ class LdapConfig(Config):
         search_base = cls._getAttr(dict, 'search_base', str)
         attributes = cls._getAttr(dict, 'attributes', list)
         use_ssl = cls._getAttrWithDefault(dict, 'use_ssl', bool, True)
-        return LdapConfig(server_path, domain, search_base, attributes, use_ssl)
+        login_failed_message = cls._getAttrWithDefault(dict, 'login_failed_message', str, "Wrong username or password")
+        return LdapConfig(server_path, domain, search_base, attributes, use_ssl, login_failed_message)
 
     @classmethod
     def getInstance(cls, value: Union['LdapConfig', AttrDict]) -> 'LdapConfig':
